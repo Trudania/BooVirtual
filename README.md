@@ -32,4 +32,4 @@ This application uses:
 
 ## Privacy Note
 
-This application uses your camera only as a background visualization. No camera data is stored or transmitted anywhere. 
+This application uses your camera only as a background visualization. No camera data is stored or transmitted anywhere. # BooVirtual

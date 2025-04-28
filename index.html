@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Château de Brissac Interactive Experience</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            font-family: Arial, sans-serif;
+        }
+        
+        .camera-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        #camera-feed {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        h1 {
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            margin-bottom: 20px;
+        }
+        
+        .image-container {
+            position: relative;
+            margin: 20px auto;
+            display: inline-block;
+            max-width: 100%;
+        }
+        
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .hotspot {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: rgba(0, 123, 255, 0.7);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .hotspot img {
+            width: 100%;
+            height: 100%;
+        }
+        
+        #hotspot1 { top: 25%; left: 20%; }
+        #hotspot2 { top: 30%; left: 60%; }
+        #hotspot3 { top: 70%; left: 30%; }
+        #hotspot4 { top: 60%; left: 70%; }
+        
+        .info-box {
+            display: none;
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 600px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .info-box-content {
+            position: relative;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 0;
+            right: 10px;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        #info-text {
+            margin-top: 10px;
+            font-size: 18px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <!-- Camera Feed -->
+    <div class="camera-container">
+        <video id="camera-feed" autoplay playsinline></video>
+    </div>
+
+    <div class="container">
+        <h1>Château de Brissac</h1>
+        
+        <div class="image-container">
+            <img src="assets/img1.png" alt="Château de Brissac">
+            <div class="hotspot" id="hotspot1" data-info="The Château de Brissac is known as the tallest castle in the Loire Valley">
+                <img src="assets/infobutton.png" alt="Info 1">
+            </div>
+            <div class="hotspot" id="hotspot2" data-info="This magnificent castle has a history dating back to the 11th century">
+                <img src="assets/infobutton.png" alt="Info 2">
+            </div>
+            <div class="hotspot" id="hotspot3" data-info="The castle is currently owned by the 13th Duke of Brissac">
+                <img src="assets/infobutton.png" alt="Info 3">
+            </div>
+            <div class="hotspot" id="hotspot4" data-info="Château de Brissac has 7 stories and over 200 rooms">
+                <img src="assets/infobutton.png" alt="Info 4">
+            </div>
+        </div>
+        
+        <!-- Info box that appears below the image -->
+        <div id="info-box" class="info-box">
+            <div class="info-box-content">
+                <span class="close-btn">&times;</span>
+                <p id="info-text"></p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Start camera
+            const video = document.getElementById('camera-feed');
+            
+            // Check if browser supports getUserMedia
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+                    .then(function(stream) {
+                        video.srcObject = stream;
+                    })
+                    .catch(function(error) {
+                        console.error("Could not access the camera: ", error);
+                    });
+            }
+            
+            // Popup functionality
+            const infoBox = document.getElementById('info-box');
+            const infoText = document.getElementById('info-text');
+            const closeBtn = document.querySelector('.close-btn');
+            const hotspots = document.querySelectorAll('.hotspot');
+            
+            // Add click event to each hotspot
+            hotspots.forEach(hotspot => {
+                hotspot.addEventListener('click', function() {
+                    const info = this.getAttribute('data-info');
+                    infoText.textContent = info;
+                    infoBox.style.display = 'block';
+                    
+                    // Scroll to info box if needed
+                    infoBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                });
+            });
+            
+            // Close info box when clicking the close button
+            closeBtn.addEventListener('click', function() {
+                infoBox.style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html> 
